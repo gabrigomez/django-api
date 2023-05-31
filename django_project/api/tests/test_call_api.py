@@ -15,7 +15,7 @@ def test_can_post_user():
         "password": "askovzinha123"
     }
     response = requests.post(LOCAL_ENDPOINT + "/create-user", json=payload)
-    assert response.status_code == 204
+    assert response.status_code == 201
 
     data = response.json()
     print(data)
