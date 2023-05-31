@@ -8,6 +8,6 @@ from django.http import HttpResponse
 def main(request):
     return HttpResponse('Working')
 
-class UserView(generics.CreateAPIView):
+class UserView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
