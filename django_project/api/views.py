@@ -5,7 +5,7 @@ from .models import User
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+
 # Create your views here.
 def main(request):
     return HttpResponse('Working')
@@ -31,6 +31,8 @@ class CreateUserView(generics.CreateAPIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class UserDetailsView(generics.ListAPIView):
+    serializer_class = UserSerializer
+
     def get(self, request, id):
         try:
             user = User.objects.get(id_user=id)
