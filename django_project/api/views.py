@@ -5,7 +5,7 @@ from .models import User
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from rest_framework.decorators import api_view
 # Create your views here.
 def main(request):
     return HttpResponse('Working')
@@ -30,7 +30,7 @@ class CreateUserView(generics.CreateAPIView):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class FindUserView(generics.ListAPIView):
+class UserDetailsView(generics.ListAPIView):
     def get(self, request, id):
         try:
             user = User.objects.get(id_user=id)
@@ -38,8 +38,6 @@ class FindUserView(generics.ListAPIView):
         except User.DoesNotExist:
             user = None
             return Response({"Usuário não existe"}, status=status.HTTP_404_NOT_FOUND)
-
-class DeleteUserView(generics.ListAPIView):
     def delete(self, request, id):
         try:
             user = User.objects.get(id_user=id)
@@ -48,4 +46,7 @@ class DeleteUserView(generics.ListAPIView):
         except User.DoesNotExist:
             user = None
             return Response({"Usuário não existe"}, status=status.HTTP_404_NOT_FOUND)
+
+
+
 
