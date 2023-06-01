@@ -38,14 +38,10 @@ def test_can_update_user():
     
     payload = {
         "email": f"{email}@gmail.com",
-        "username": f"{username}",
-        "password": "askovzinha123"
+        "username": f"{username}",        
     }
-    response = requests.post(ENDPOINT + "/user/7", json=payload)
-    assert response.status_code == 201
-
-    data = response.json()
-    print(data)
+    response = requests.put(ENDPOINT + "/user/7", json=payload)
+    assert response.status_code == 204
 
 def test_can_delete_user():
     response = requests.delete(ENDPOINT + '/user/1')
