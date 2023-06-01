@@ -39,4 +39,13 @@ class FindUserView(generics.ListAPIView):
             user = None
             return Response({"Usuário não existe"}, status=status.HTTP_404_NOT_FOUND)
 
+class DeleteUserView(generics.ListAPIView):
+    def delete(self, request, id):
+        try:
+            user = User.objects.get(id_user=id)
+            user.delete()
+            return Response({'Usuário excluído com sucesso'}, status=status.HTTP_204_NO_CONTENT)
+        except User.DoesNotExist:
+            user = None
+            return Response({"Usuário não existe"}, status=status.HTTP_404_NOT_FOUND)
 
