@@ -49,7 +49,20 @@ class UserDetailsView(generics.ListAPIView):
         except User.DoesNotExist:
             user = None
             return Response({"Usuário não existe"}, status=status.HTTP_404_NOT_FOUND)
+            
+    def put(self, request, id):
+        try:
+            user = User.objects.get(id_user=id)
 
+            serializer = UserSerializer(user, data=request.data)        
+            if not serializer.is_valid():
+                print(serializer.errors)
+                return Response({"Erro na requisição"},status=status.HTTP_400_BAD_REQUEST)
+            
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            return Response({"Usuário não encontrado"},status=status.HTTP_404_NOT_FOUND)
 
 
 
