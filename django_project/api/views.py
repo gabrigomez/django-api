@@ -34,7 +34,7 @@ class FindUserView(generics.ListAPIView):
     def get(self, request, id):
         try:
             user = User.objects.get(id_user=id)
-            return Response(UserSerializer(user).data, status=status.HTTP_204_NO_CONTENT)
+            return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             user = None
             return Response({"Usuário não existe"}, status=status.HTTP_404_NOT_FOUND)

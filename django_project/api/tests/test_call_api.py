@@ -20,6 +20,10 @@ def test_can_post_user():
     data = response.json()
     print(data)
 
+def test_can_find_user():
+    response = requests.get(LOCAL_ENDPOINT + '/user/9')
+    assert response.status_code == 200
+
 def test_can_delete_user():
     response = requests.delete(LOCAL_ENDPOINT + '/user/1')
     assert response.status_code == 201
