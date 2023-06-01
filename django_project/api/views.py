@@ -31,14 +31,12 @@ class CreateUserView(generics.CreateAPIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class FindUserView(generics.ListAPIView):
-    serializer_class = UserSerializer
-
-    def get(self, request):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            id = serializer.data.get('id_user')
-            user = User(id_user=id)            
+    def get(self, request, id):
+        try:
+            user = User.objects.get(id_user=id)
             return Response(UserSerializer(user).data, status=status.HTTP_204_NO_CONTENT)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            user = None
+            return Response({"Usuário não existe"}, status=status.HTTP_404_NOT_FOUND)
+
 
