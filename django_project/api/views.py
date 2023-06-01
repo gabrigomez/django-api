@@ -10,7 +10,7 @@ from rest_framework.decorators import api_view
 def main(request):
     return HttpResponse('Working')
 
-class UserView(generics.ListAPIView):
+class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -38,6 +38,7 @@ class UserDetailsView(generics.ListAPIView):
         except User.DoesNotExist:
             user = None
             return Response({"Usuário não existe"}, status=status.HTTP_404_NOT_FOUND)
+        
     def delete(self, request, id):
         try:
             user = User.objects.get(id_user=id)
