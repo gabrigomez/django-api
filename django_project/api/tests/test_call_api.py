@@ -1,17 +1,25 @@
 import requests
+import random
+import string
 
 ENDPOINT = "https://todo.pixegami.io"
 LOCAL_ENDPOINT = "http://127.0.0.1:8000"
 
+def random_name(char_num):
+    return ''.join(random.choice(string.ascii_letters) for _ in range(char_num))
 
 def test_call_api():
     response = requests.get(LOCAL_ENDPOINT + '/user')
     assert response.status_code == 200
 
 def test_can_post_user():
+    range_number = random.randint(3,12)
+    email = random_name(range_number).lower()
+    username = random_name(range_number)
+    
     payload = {
-        "email": "ivo@example.com",
-        "username": "ivok",
+        "email": f"{email}@gmail.com",
+        "username": f"{username}",
         "password": "askovzinha123"
     }
     response = requests.post(LOCAL_ENDPOINT + "/create-user", json=payload)
