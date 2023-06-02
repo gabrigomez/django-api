@@ -52,8 +52,8 @@ def test_can_delete_user():
 
 def test_can_user_login():
     payload = {
-        "username": "thyago",
-        "password": "askovzinha123"
+        "email": "manito@example.com",
+        "password": "12345"
     }
-    response = requests.post(ENDPOINT + "login")
+    response = requests.post(ENDPOINT + "/login", json=payload)
     assert response.status_code == 204
