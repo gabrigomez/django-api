@@ -1,12 +1,14 @@
 from django.shortcuts import render
-from rest_framework import generics, status
-from .serializers import UserSerializer, CreateUserSerializer
-from .models import User
 from django.http import HttpResponse
+from django.contrib.auth.hashers import make_password
+
+from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.contrib.auth.hashers import make_password
 from rest_framework.exceptions import AuthenticationFailed
+
+from .serializers import UserSerializer, CreateUserSerializer
+from .models import User
 import jwt, datetime, os, dotenv
 
 dotenv.load_dotenv(dotenv.find_dotenv())
@@ -60,7 +62,7 @@ class LoginView(generics.CreateAPIView):
     
 class UserDetailsView(generics.ListAPIView):
     serializer_class = UserSerializer
-
+    
     def get(self, request, id):
         try:
             user = User.objects.get(id_user=id)
