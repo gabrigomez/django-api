@@ -54,7 +54,7 @@ class LoginView(generics.CreateAPIView):
         }
 
         secret = os.getenv("secret")
-        token = jwt.encode(payload, "secret", algorithm='HS256')
+        token = jwt.encode(payload, secret, algorithm='HS256')
         
         return Response({'token': token}, status=status.HTTP_204_NO_CONTENT)
     
