@@ -32,7 +32,20 @@ class CreateUserView(generics.CreateAPIView):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
+class LoginView(generics.CreateAPIView):
+    def post(self, request):
+        email = request.data.get('email')
+        password = request.data.get('password')
 
+        user = User.objects.filter(email=email).first()
+        if user is None:
+            raise AuthenticationFailed('Usuário não encontrado')
+        
+        if not user.check_password(password):
+            raise AuthenticationFailed('Senha incorreta')
+        
+        return Response({'Login efetuado com sucesso'}, status=status.HTTP_204_NO_CONTENT)
+    
 class UserDetailsView(generics.ListAPIView):
     serializer_class = UserSerializer
 
