@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password
+from rest_framework.exceptions import AuthenticationFailed
 
 # Create your views here.
 def main(request):
@@ -30,6 +31,7 @@ class CreateUserView(generics.CreateAPIView):
             return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        
 
 class UserDetailsView(generics.ListAPIView):
     serializer_class = UserSerializer
