@@ -7,6 +7,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password
 from rest_framework.exceptions import AuthenticationFailed
+import jwt, datetime, os, dotenv
+
+dotenv.load_dotenv(dotenv.find_dotenv())
 
 # Create your views here.
 def main(request):
@@ -44,7 +47,16 @@ class LoginView(generics.CreateAPIView):
         if not user.check_password(password):
             raise AuthenticationFailed('Senha incorreta')
         
-        return Response({'Login efetuado com sucesso'}, status=status.HTTP_204_NO_CONTENT)
+        payload = {
+            'id': user.id_user,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+            'iat': datetime.datetime.utcnow()
+        }
+
+        secret = os.getenv("secret")
+        token = jwt.encode(payload, f"{secret}", algorithm='HS256')
+        
+        return Response({'token': token}, status=status.HTTP_204_NO_CONTENT)
     
 class UserDetailsView(generics.ListAPIView):
     serializer_class = UserSerializer
