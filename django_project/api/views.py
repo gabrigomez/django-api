@@ -5,6 +5,7 @@ from .models import User
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.contrib.auth.hashers import make_password
 
 # Create your views here.
 def main(request):
