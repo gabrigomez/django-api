@@ -49,3 +49,11 @@ def test_can_delete_user():
 
     response = requests.get(ENDPOINT + '/user/1')
     assert response.status_code == 404
+
+def test_can_user_login():
+    payload = {
+        "username": "thyago",
+        "password": "askovzinha123"
+    }
+    response = requests.post(ENDPOINT + "login")
+    assert response.status_code == 201

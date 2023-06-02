@@ -22,7 +22,7 @@ class CreateUserView(generics.CreateAPIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             email = serializer.data.get('email')
-            password = serializer.data.get('password')
+            password = make_password(serializer.data.get('password'))
             username = serializer.data.get('username')
             
             user = User(email=email, password=password, username=username)
