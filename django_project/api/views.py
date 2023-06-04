@@ -76,7 +76,8 @@ class UserDetailsView(generics.ListAPIView):
             except User.DoesNotExist:
                 user = None
                 return Response({"Usuário não existe"}, status=status.HTTP_404_NOT_FOUND)
-        raise AuthenticationFailed('Sem autorização')
+        
+        return Response({"Sem autorização!"}, status=status.HTTP_404_NOT_FOUND)
         
     def delete(self, request, id):
         try:

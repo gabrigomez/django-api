@@ -13,5 +13,3 @@ def permissions(request):
 		secret = os.getenv("secret")
 		token = jwt.decode(payload, secret, algorithms='HS256')
 		return token['id']
-	else:
-		return AuthenticationFailed('Token inválido')
