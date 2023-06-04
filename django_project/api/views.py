@@ -9,7 +9,7 @@ from rest_framework.exceptions import AuthenticationFailed
 
 from .serializers import UserSerializer, CreateUserSerializer
 from .models import User
-from .auth import decode_token, create_token
+from .auth import decode_token, create_token, decode_refresh_token
 import jwt, datetime, os, dotenv
 
 
@@ -105,7 +105,12 @@ class UserDetailsView(generics.ListAPIView):
         
 class RefreshTokenView(generics.ListAPIView):
     def post(self, request):
-        pass
+        refresh_token = request.COOKIES.get('refresh_token')
+        id = decode_refresh_token(refresh_token)
+        token = create_token(id, 0.10)
+        
+        return Response({"token": token},status=status.HTTP_204_NO_CONTENT)
+
 
 
 
