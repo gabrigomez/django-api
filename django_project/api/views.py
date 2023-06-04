@@ -6,11 +6,10 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework.authentication import get_authorization_header
 
 from .serializers import UserSerializer, CreateUserSerializer
 from .models import User
-from .auth import permissions
+from .auth import decode_token
 import jwt, datetime, os, dotenv
 
 
@@ -44,8 +43,8 @@ class LoginView(generics.CreateAPIView):
     def post(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
-
         user = User.objects.filter(email=email).first()
+
         if user is None:
             raise AuthenticationFailed('Usuário não encontrado')
         
@@ -54,7 +53,7 @@ class LoginView(generics.CreateAPIView):
         
         payload = {
             'id': user.id_user,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=1),
             'iat': datetime.datetime.utcnow()
         }
 
@@ -67,7 +66,7 @@ class UserDetailsView(generics.ListAPIView):
     serializer_class = UserSerializer
     
     def get(self, request, id):
-        access = permissions(request)
+        access = decode_token(request)
 
         if access:
             try:
@@ -95,8 +94,7 @@ class UserDetailsView(generics.ListAPIView):
             serializer = UserSerializer(user, data=request.data)        
             if not serializer.is_valid():
                 print(serializer.errors)
-                return Response({"Erro na requisição"},status=status.HTTP_400_BAD_REQUEST)
-            
+                return Response({"Erro na requisição"},status=status.HTTP_400_BAD_REQUEST)            
             serializer.save()
             return Response(serializer.data,status=status.HTTP_204_NO_CONTENT)
         except Exception as e:

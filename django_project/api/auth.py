@@ -5,7 +5,7 @@ import jwt, os, dotenv
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
-def permissions(request):
+def decode_token(request):
 	auth = get_authorization_header(request).split()
 
 	if auth and len(auth) == 2:
