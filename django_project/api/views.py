@@ -52,8 +52,15 @@ class LoginView(generics.CreateAPIView):
             raise AuthenticationFailed('Senha incorreta')
 
         token = create_token(user.id_user, 0.10)
+        refresh_token = create_token(user.id_user, 168)
+        Response().set_cookie(key='refresh_token', value=refresh_token, httponly=True)
         
-        return Response({'token': token}, status=status.HTTP_204_NO_CONTENT)    
+        return Response({
+            'token': token,
+            'refresh_token': refresh_token
+            }, 
+            status=status.HTTP_204_NO_CONTENT
+        )    
 
 class UserDetailsView(generics.ListAPIView):
     serializer_class = UserSerializer
@@ -92,6 +99,10 @@ class UserDetailsView(generics.ListAPIView):
             return Response(serializer.data,status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return Response({"Usuário não encontrado"},status=status.HTTP_404_NOT_FOUND)
+        
+class RefreshTokenView(generics.ListAPIView):
+    def post(self, request):
+        pass
 
 
 
