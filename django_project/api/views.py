@@ -9,7 +9,7 @@ from rest_framework.exceptions import AuthenticationFailed
 
 from .serializers import UserSerializer, CreateUserSerializer
 from .models import User
-from .auth import decode_token
+from .auth import decode_token, create_token
 import jwt, datetime, os, dotenv
 
 
@@ -50,15 +50,8 @@ class LoginView(generics.CreateAPIView):
         
         if not user.check_password(password):
             raise AuthenticationFailed('Senha incorreta')
-        
-        payload = {
-            'id': user.id_user,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=1),
-            'iat': datetime.datetime.utcnow()
-        }
 
-        secret = os.getenv("secret")
-        token = jwt.encode(payload, secret, algorithm='HS256')
+        token = create_token(user.id_user, 0.10)
         
         return Response({'token': token}, status=status.HTTP_204_NO_CONTENT)    
 
