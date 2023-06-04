@@ -53,14 +53,17 @@ class LoginView(generics.CreateAPIView):
 
         token = create_token(user.id_user, 0.10)
         refresh_token = create_token(user.id_user, 168)
-        Response().set_cookie(key='refresh_token', value=refresh_token, httponly=True)
         
-        return Response({
+        response = Response()
+        response.set_cookie(key='refresh_token', value=refresh_token, httponly=True)
+        
+        response.data = {
             'token': token,
             'refresh_token': refresh_token
-            }, 
-            status=status.HTTP_204_NO_CONTENT
-        )    
+        }
+        response.status_code=status.HTTP_204_NO_CONTENT  
+        
+        return response  
 
 class UserDetailsView(generics.ListAPIView):
     serializer_class = UserSerializer
