@@ -6,10 +6,13 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.authentication import get_authorization_header
 
 from .serializers import UserSerializer, CreateUserSerializer
 from .models import User
+from .auth import permissions
 import jwt, datetime, os, dotenv
+
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -37,7 +40,7 @@ class CreateUserView(generics.CreateAPIView):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
-class LoginView(generics.CreateAPIView):
+class LoginView(generics.CreateAPIView):          
     def post(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
@@ -58,18 +61,22 @@ class LoginView(generics.CreateAPIView):
         secret = os.getenv("secret")
         token = jwt.encode(payload, secret, algorithm='HS256')
         
-        return Response({'token': token}, status=status.HTTP_204_NO_CONTENT)
-    
+        return Response({'token': token}, status=status.HTTP_204_NO_CONTENT)    
+
 class UserDetailsView(generics.ListAPIView):
     serializer_class = UserSerializer
     
     def get(self, request, id):
-        try:
-            user = User.objects.get(id_user=id)
-            return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
-            user = None
-            return Response({"Usuário não existe"}, status=status.HTTP_404_NOT_FOUND)
+        access = permissions(request)
+
+        if access:
+            try:
+                user = User.objects.get(id_user=id)
+                return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
+            except User.DoesNotExist:
+                user = None
+                return Response({"Usuário não existe"}, status=status.HTTP_404_NOT_FOUND)
+        raise AuthenticationFailed('Sem autorização')
         
     def delete(self, request, id):
         try:
