@@ -25,9 +25,8 @@ def create_token(id, duration):
 	}, secret, algorithm='HS256')
 
 def decode_refresh_token(payload):
-
-    token = jwt.decode(payload, secret, algorithms='HS256')
-    return token['id']
+	token = jwt.decode(payload, secret, algorithms='HS256')
+	return token['id']
 
 	
 	
